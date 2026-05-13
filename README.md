@@ -79,3 +79,7 @@ The project architecture was designed to provide separation of responsibilities 
 [ ] Implement a "Clear" button to quickly reset the search.
 
 [ ] Dark Mode support.
+
+Don't forget to replace YOUR_USERNAME in the git clone link with your actual GitHub username.
+
+Replace [Your Name] and YOUR_LINKEDIN on the last line with your real credentials.
