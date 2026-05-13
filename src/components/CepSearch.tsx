@@ -16,46 +16,44 @@ export interface Cep {
     siafi: string
 }
 
-async function buscaCep(cep: string) {
+async function fetchCep(cep: string) {
     const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`)
     return await response.json()
 }
 
 export const CepSearch = () => {
-    // Adicionamos um estado para controlar o que está escrito no input em tempo real
+    
     const [cepInput, setCepInput] = useState("")
     
     const [cepData, setCepData] = useState<Cep | null>(null)
     const [error, setError] = useState<string | null>(null)
     const [isLoading, setIsLoading] = useState(false)
 
-    // ✨ A MÁGICA DA MÁSCARA ACONTECE AQUI ✨
+    
     const handleCepChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        // 1. Pega o que o usuário digitou e remove tudo que NÃO for número
+        
         let valor = event.target.value.replace(/\D/g, "");
 
-        // 2. Limita a 8 números (para evitar que o usuário digite infinitamente)
+        
         valor = valor.slice(0, 8);
 
-        // 3. Se tiver mais de 5 números, coloca o traço entre o 5º e o 6º número
+        
         if (valor.length > 5) {
             valor = valor.replace(/^(\d{5})(\d)/, "$1-$2");
         }
 
-        // 4. Atualiza o estado, o que faz o input atualizar na tela instantaneamente
         setCepInput(valor);
     }
 
     async function getCep(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault()
 
-        // Removemos o traço do nosso estado para poder validar e buscar na API
-        const cepLimpo = cepInput.replace("-", "");
+        const cleanCep = cepInput.replace("-", "");
 
         setCepData(null)
         setError(null)
 
-        const apenasNumeros = /^\d{8}$/.test(cepLimpo);
+        const apenasNumeros = /^\d{8}$/.test(cleanCep);
         
         if (!apenasNumeros) {
             setError('O CEP deve conter exatamente 8 números.')
@@ -64,7 +62,7 @@ export const CepSearch = () => {
 
         try {
             setIsLoading(true)
-            const data = await buscaCep(cepLimpo)
+            const data = await fetchCep(cleanCep)
 
             if (data.erro) {
                 setError('CEP não encontrado em nossa base de dados.')
@@ -92,10 +90,10 @@ export const CepSearch = () => {
                         type='text' 
                         name='cep' 
                         id='cep'
-                        value={cepInput} // O React agora controla o valor exibido
-                        onChange={handleCepChange} // Chama a função a cada tecla apertada
+                        value={cepInput} 
+                        onChange={handleCepChange} 
                         placeholder="Ex: 01001-000"
-                        maxLength={9} // 8 números + 1 traço = 9 caracteres máximos
+                        maxLength={9} 
                         className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                     />
                 </div>
